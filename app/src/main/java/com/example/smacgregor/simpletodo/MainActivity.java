@@ -1,12 +1,17 @@
 package com.example.smacgregor.simpletodo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -18,13 +23,16 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final String kToDosFileName = "ToDos.txt";
+    private static final String kToDosFileName = "ToDos.txt";
+    private File toDoFile;
+    private final int kEditToDoResultCode = 1;
 
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;
-    private ListView listViewItems;
 
-    private File toDoFile;
+    private ListView listViewItems;
+    private EditText addNewToDoItemTextInput;
+    private Button addNewToDoItemButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +40,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        addNewToDoItemTextInput = (EditText)findViewById(R.id.etNewItem);
+        addNewToDoItemButton = (Button)findViewById(R.id.btnAddItem);
         listViewItems = (ListView)findViewById(R.id.lvItems);
         readItems();
 
-        // The array adapter will apply our template list item view against our model
+        // The array adapter will apply a model to a template list item view to produce a model
         itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         listViewItems.setAdapter(itemsAdapter);
 
         setupListViewListener();
+        setupAddNewToDoTextField();
     }
 
     @Override
@@ -64,6 +75,49 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == kEditToDoResultCode) {
+            updateToDoItem(data.getStringExtra(EditItemActivity.kToDosItemValue), data.getIntExtra(EditItemActivity.kToDosItemPosition, 0));
+        }
+    }
+
+    /**
+     * Add a new item to the to-do list.
+     * @param itemToAdd
+     */
+    public void addToDoItem(String itemToAdd) {
+        itemsAdapter.add(itemToAdd);
+        saveItems();
+    }
+
+    /**
+     * Remove an item from the to-do list.
+     * @param itemToRemove
+     */
+    public void removeToDoItem(String itemToRemove) {
+       itemsAdapter.remove(itemToRemove);
+        saveItems();
+    }
+
+    public void updateToDoItem(final String updatedItem, int position) {
+        items.set(position, updatedItem);
+        itemsAdapter.notifyDataSetChanged();
+        saveItems();
+    }
+
+    /**
+     *
+     * Edit the todo item referenced by position
+     * @param position
+     */
+    public void editItem(int position) {
+        Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
+        intent.putExtra(EditItemActivity.kToDosItemPosition, position);
+        intent.putExtra(EditItemActivity.kToDosItemValue, itemsAdapter.getItem(position));
+        startActivityForResult(intent, kEditToDoResultCode);
+    }
+
     /**
      * Add an item to the view
      * @param view
@@ -74,38 +128,41 @@ public class MainActivity extends AppCompatActivity {
         // Avoid adding an empty item
         // Shall we put up an error message for the user?
         if (newItemText.length() > 0) {
-            addItem(newItemText);
+            addToDoItem(newItemText);
             editText.setText("");
         }
     }
 
-    /**
-     * Add a new item to the to-do list.
-     * @param itemToAdd
-     */
-    public void addItem(String itemToAdd) {
-        itemsAdapter.add(itemToAdd);
-        saveItems();
-    }
-
-    /**
-     * Remove an item from the to-do list.
-     * @param itemToRemove
-     */
-    public void removeItem(String itemToRemove) {
-       itemsAdapter.remove(itemToRemove);
-        saveItems();
-    }
-
     private void setupListViewListener() {
+
+        listViewItems.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        editItem(position);
+                        return;
+                    }
+                });
+
         listViewItems.setOnItemLongClickListener(
                 new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        removeItem(items.get(position));
+                        removeToDoItem(items.get(position));
                         return true;
                     }
                 });
+    }
+
+    private void setupAddNewToDoTextField() {
+        // Only enable the add new to-do button when we have a non empty item name
+        addNewToDoItemTextInput.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                addNewToDoItemButton.setEnabled(!TextUtils.isEmpty(s.toString()));
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+        });
     }
 
     private File getToDoFile() {
