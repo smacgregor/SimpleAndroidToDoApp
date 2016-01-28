@@ -27,7 +27,6 @@ public class EditItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_item);
 
         saveButton = (Button)findViewById(R.id.saveButton);
-        saveButton.setEnabled(false); // can this be specified in XML?
         editItemTextField = (EditText)findViewById(R.id.editText);
 
         setupEditItemTextField(getIntent().getStringExtra(kToDosItemValue));
