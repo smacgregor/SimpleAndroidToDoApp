@@ -4,7 +4,7 @@ SimpleAndroidToDoApp is an android app that allows building a todo list and basi
 
 Submitted by: Scott MacGregor
 
-Time spent: 4 hours spent in total
+Time spent: 5 hours spent in total
 
 ## User Stories
 
@@ -32,13 +32,15 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![simpletodoapp](https://cloud.githubusercontent.com/assets/1521460/12637645/c5333c1e-c54b-11e5-8d63-d44df8429aba.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-I had a lot of fun doing this! Would love to know if there's a way to automatically bind view elements in the XML for an activity to member variables in the coresponding Java activity class.
+I had a lot of fun doing this! Would love to know if there's a way to automatically bind view elements in the XML to an activities member  member variables.
+
+Next steps - the main activity has too many responsibilities - create a separate data manager for saving/loading todos. I'd also like to create a model to represent a to-do and maybe experiment with using DBFlow as the database? 
 
 ## License
 
