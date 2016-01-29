@@ -15,8 +15,8 @@ import android.widget.EditText;
 public class EditItemActivity extends AppCompatActivity {
 
     // Move these to a shared constants file
-    public static final String kToDosItemPosition = "ToDoPosition";
-    public static final String kToDosItemValue = "ToDoValue";
+    public static final String TODO_ITEM_POSITION = "ToDoPosition";
+    public static final String TODO_ITEM_VALUE = "ToDoValue";
 
     private EditText editItemTextField;
     private Button saveButton;
@@ -29,7 +29,7 @@ public class EditItemActivity extends AppCompatActivity {
         saveButton = (Button)findViewById(R.id.saveButton);
         editItemTextField = (EditText)findViewById(R.id.editText);
 
-        setupEditItemTextField(getIntent().getStringExtra(kToDosItemValue));
+        setupEditItemTextField(getIntent().getStringExtra(TODO_ITEM_VALUE));
     }
 
     @Override
@@ -60,8 +60,8 @@ public class EditItemActivity extends AppCompatActivity {
 
     private void saveModifications() {
         Intent modifiedData = new Intent();
-        modifiedData.putExtra(kToDosItemValue, editItemTextField.getText().toString());
-        modifiedData.putExtra(kToDosItemPosition, getIntent().getIntExtra(kToDosItemPosition, 0));
+        modifiedData.putExtra(TODO_ITEM_VALUE, editItemTextField.getText().toString());
+        modifiedData.putExtra(TODO_ITEM_POSITION, getIntent().getIntExtra(TODO_ITEM_POSITION, 0));
         setResult(RESULT_OK, modifiedData);
         finish();
 
