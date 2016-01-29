@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String kToDosFileName = "ToDos.txt";
+    private static final String TO_DOS_FILENAME = "ToDos.txt";
     private File toDoFile;
     private final int kEditToDoResultCode = 1;
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == kEditToDoResultCode) {
-            updateToDoItem(data.getStringExtra(EditItemActivity.kToDosItemValue), data.getIntExtra(EditItemActivity.kToDosItemPosition, 0));
+            updateToDoItem(data.getStringExtra(EditItemActivity.TODO_ITEM_VALUE), data.getIntExtra(EditItemActivity.TODO_ITEM_POSITION, 0));
         }
     }
 
@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void editItem(int position) {
         Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
-        intent.putExtra(EditItemActivity.kToDosItemPosition, position);
-        intent.putExtra(EditItemActivity.kToDosItemValue, itemsAdapter.getItem(position));
+        intent.putExtra(EditItemActivity.TODO_ITEM_POSITION, position);
+        intent.putExtra(EditItemActivity.TODO_ITEM_VALUE, itemsAdapter.getItem(position));
         startActivityForResult(intent, kEditToDoResultCode);
     }
 
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
     private File getToDoFile() {
         if (toDoFile == null) {
             File filesDir = getFilesDir();
-            toDoFile = new File(filesDir, kToDosFileName);
+            toDoFile = new File(filesDir, TO_DOS_FILENAME);
         }
         return toDoFile;
     }
