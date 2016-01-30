@@ -12,14 +12,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.smacgregor.simpletodo.core.ToDoItem;
+
 public class EditItemActivity extends AppCompatActivity {
 
     // Move these to a shared constants file
-    public static final String TODO_ITEM_POSITION = "ToDoPosition";
-    public static final String TODO_ITEM_VALUE = "ToDoValue";
+    public static final String TODO_ITEM = "ToDoItem";
 
     private EditText editItemTextField;
     private Button saveButton;
+
+    private ToDoItem toDoItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,8 @@ public class EditItemActivity extends AppCompatActivity {
         saveButton = (Button)findViewById(R.id.saveButton);
         editItemTextField = (EditText)findViewById(R.id.editText);
 
-        setupEditItemTextField(getIntent().getStringExtra(TODO_ITEM_VALUE));
+        toDoItem = (ToDoItem)getIntent().getSerializableExtra(EditItemActivity.TODO_ITEM);
+        setupEditItemTextField(toDoItem.name);
     }
 
     @Override
@@ -60,11 +64,10 @@ public class EditItemActivity extends AppCompatActivity {
 
     private void saveModifications() {
         Intent modifiedData = new Intent();
-        modifiedData.putExtra(TODO_ITEM_VALUE, editItemTextField.getText().toString());
-        modifiedData.putExtra(TODO_ITEM_POSITION, getIntent().getIntExtra(TODO_ITEM_POSITION, 0));
+        toDoItem.name = editItemTextField.getText().toString();
+        modifiedData.putExtra(TODO_ITEM, toDoItem);
         setResult(RESULT_OK, modifiedData);
         finish();
-
     }
 
     private void setupEditItemTextField(final String editItemName) {
