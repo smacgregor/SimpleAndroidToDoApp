@@ -1,4 +1,4 @@
-package com.example.smacgregor.simpletodo;
+package com.example.smacgregor.simpletodo.main.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.smacgregor.simpletodo.EditItemActivity;
+import com.example.smacgregor.simpletodo.R;
 import com.example.smacgregor.simpletodo.core.ToDoItem;
 import com.example.smacgregor.simpletodo.core.ToDoItemDatabase;
 
