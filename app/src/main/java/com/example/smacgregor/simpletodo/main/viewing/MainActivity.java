@@ -1,4 +1,4 @@
-package com.example.smacgregor.simpletodo;
+package com.example.smacgregor.simpletodo.main.viewing;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.smacgregor.simpletodo.editing.EditItemActivity;
+import com.example.smacgregor.simpletodo.R;
 import com.example.smacgregor.simpletodo.core.ToDoItem;
 import com.example.smacgregor.simpletodo.core.ToDoItemDatabase;
 
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private final int kEditToDoResultCode = 1;
 
     private List<ToDoItem> items;
-    private ArrayAdapter<ToDoItem> itemsAdapter;
+    private ToDoAdapter itemsAdapter;
 
     private ListView listViewItems;
     private EditText addNewToDoItemTextInput;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         readItems();
 
         // The array adapter will apply a model to a template list item view to produce a model
-        itemsAdapter = new ArrayAdapter<ToDoItem>(this, android.R.layout.simple_list_item_1, items);
+        itemsAdapter = new ToDoAdapter(this, items);
         listViewItems.setAdapter(itemsAdapter);
 
         setupListViewListener();
@@ -97,13 +98,14 @@ public class MainActivity extends AppCompatActivity {
      * @param itemToRemove
      */
     public void removeToDoItem(ToDoItem itemToRemove) {
-       itemsAdapter.remove(itemToRemove);
         ToDoItemDatabase.getInstance(this).deleteToDo(itemToRemove);
+        itemsAdapter.remove(itemToRemove);
     }
 
     public void updateToDoItem(ToDoItem toDoItem) {
-        itemsAdapter.notifyDataSetChanged();
         ToDoItemDatabase.getInstance(this).updateToDoItem(toDoItem);
+        items.set(toDoItem.position, toDoItem);
+        itemsAdapter.notifyDataSetChanged();
     }
 
     /**
