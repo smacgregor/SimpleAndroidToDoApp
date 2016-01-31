@@ -4,7 +4,7 @@ SimpleAndroidToDoApp is an android app that allows building a todo list and basi
 
 Submitted by: Scott MacGregor
 
-Time spent: 5 hours spent in total
+Time spent: 9 hours spent in total
 
 ## User Stories
 
@@ -16,8 +16,8 @@ The following **required** functionality is completed:
 
 The following **optional** features are implemented:
 
-* [ ] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
-* [ ] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
+* [X] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
+* [X] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
 * [ ] Add support for completion due dates for todo items (and display within listview item)
 * [ ] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
 * [ ] Add support for selecting the priority of each todo item (and display in listview item)
@@ -39,8 +39,6 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 I had a lot of fun doing this! Would love to know if there's a way to automatically bind view elements in the XML to an activities member  member variables.
-
-Next steps - the main activity has too many responsibilities - create a separate data manager for saving/loading todos. I'd also like to create a model to represent a to-do and maybe experiment with using DBFlow as the database? 
 
 ## License
 
