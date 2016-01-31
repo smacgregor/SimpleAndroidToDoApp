@@ -1,4 +1,4 @@
-package com.example.smacgregor.simpletodo.main.ui;
+package com.example.smacgregor.simpletodo.main.viewing;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.example.smacgregor.simpletodo;
+package com.example.smacgregor.simpletodo.editing;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.smacgregor.simpletodo.R;
 import com.example.smacgregor.simpletodo.core.ToDoItem;
 
 public class EditItemActivity extends AppCompatActivity {
