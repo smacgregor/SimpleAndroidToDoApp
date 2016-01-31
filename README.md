@@ -38,7 +38,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-I had a lot of fun doing this! Would love to know if there's a way to automatically bind view elements in the XML to an activities member  member variables.
+I had a lot of fun doing this! Plan on replacing using SQLite directly with an ORM in the next pass.
 
 ## License
 
