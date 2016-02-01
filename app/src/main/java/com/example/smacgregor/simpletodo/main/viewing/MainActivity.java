@@ -14,10 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.example.smacgregor.simpletodo.editing.EditItemActivity;
+import com.activeandroid.query.Select;
 import com.example.smacgregor.simpletodo.R;
 import com.example.smacgregor.simpletodo.core.ToDoItem;
-import com.example.smacgregor.simpletodo.core.ToDoItemDatabase;
+import com.example.smacgregor.simpletodo.editing.EditItemActivity;
 
 import java.util.List;
 
@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == kEditToDoResultCode) {
-            updateToDoItem((ToDoItem)data.getSerializableExtra(EditItemActivity.TODO_ITEM));
+            ToDoItem toDoItem = ToDoItem.load(ToDoItem.class, data.getLongExtra(EditItemActivity.TODO_ITEM_ID, 0));
+            updateToDoItem(toDoItem);
         }
     }
 
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         newToDoItem.name = itemToAdd;
         newToDoItem.position = itemsAdapter.getCount();
         itemsAdapter.add(newToDoItem);
-        newToDoItem.key = ToDoItemDatabase.getInstance(this).addToDoItem(newToDoItem);
+        newToDoItem.save();
     }
 
     /**
@@ -98,13 +99,11 @@ public class MainActivity extends AppCompatActivity {
      * @param itemToRemove
      */
     public void removeToDoItem(ToDoItem itemToRemove) {
-        ToDoItemDatabase.getInstance(this).deleteToDo(itemToRemove);
+        itemToRemove.delete();
         itemsAdapter.remove(itemToRemove);
     }
 
     public void updateToDoItem(ToDoItem toDoItem) {
-        ToDoItemDatabase.getInstance(this).updateToDoItem(toDoItem);
-        items.set(toDoItem.position, toDoItem);
         itemsAdapter.notifyDataSetChanged();
     }
 
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void editToDoItem(ToDoItem toDoItem) {
         Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
-        intent.putExtra(EditItemActivity.TODO_ITEM, toDoItem);
+        intent.putExtra(EditItemActivity.TODO_ITEM_ID, toDoItem.getId());
         startActivityForResult(intent, kEditToDoResultCode);
     }
 
@@ -161,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readItems() {
-        // ideally this would run on a background thread and then update the UI when complete
-        items = ToDoItemDatabase.getInstance(this).getAllToDoItems();
+        // a db query blocking the main thread...
+        items = new Select().from(ToDoItem.class).orderBy("Position ASC").execute();
     }
 }

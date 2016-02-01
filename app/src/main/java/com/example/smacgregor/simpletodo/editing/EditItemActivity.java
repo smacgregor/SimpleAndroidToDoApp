@@ -18,7 +18,7 @@ import com.example.smacgregor.simpletodo.core.ToDoItem;
 public class EditItemActivity extends AppCompatActivity {
 
     // Move these to a shared constants file
-    public static final String TODO_ITEM = "ToDoItem";
+    public static final String TODO_ITEM_ID = "ToDoItemId";
 
     private EditText editItemTextField;
     private Button saveButton;
@@ -33,7 +33,7 @@ public class EditItemActivity extends AppCompatActivity {
         saveButton = (Button)findViewById(R.id.saveButton);
         editItemTextField = (EditText)findViewById(R.id.editText);
 
-        toDoItem = (ToDoItem)getIntent().getSerializableExtra(EditItemActivity.TODO_ITEM);
+        toDoItem = ToDoItem.load(ToDoItem.class, getIntent().getLongExtra(EditItemActivity.TODO_ITEM_ID, 0));
         setupEditItemTextField(toDoItem.name);
     }
 
@@ -66,7 +66,8 @@ public class EditItemActivity extends AppCompatActivity {
     private void saveModifications() {
         Intent modifiedData = new Intent();
         toDoItem.name = editItemTextField.getText().toString();
-        modifiedData.putExtra(TODO_ITEM, toDoItem);
+        toDoItem.save(); // save the changes
+        modifiedData.putExtra(EditItemActivity.TODO_ITEM_ID, toDoItem.getId());
         setResult(RESULT_OK, modifiedData);
         finish();
     }
