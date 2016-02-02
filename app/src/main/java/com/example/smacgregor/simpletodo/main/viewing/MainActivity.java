@@ -21,6 +21,13 @@ import com.example.smacgregor.simpletodo.editing.EditItemActivity;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
+import butterknife.OnItemLongClick;
+import butterknife.OnTextChanged;
+
 public class MainActivity extends AppCompatActivity {
 
     private final int kEditToDoResultCode = 1;
@@ -28,28 +35,22 @@ public class MainActivity extends AppCompatActivity {
     private List<ToDoItem> items;
     private ToDoAdapter itemsAdapter;
 
-    private ListView listViewItems;
-    private EditText addNewToDoItemTextInput;
-    private Button addNewToDoItemButton;
+    @Bind(R.id.lvItems) ListView listViewItems;
+    @Bind(R.id.etNewItem) EditText addNewToDoItemTextInput;
+    @Bind(R.id.btnAddItem) Button addNewToDoItemButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        addNewToDoItemTextInput = (EditText)findViewById(R.id.etNewItem);
-        addNewToDoItemButton = (Button)findViewById(R.id.btnAddItem);
-        listViewItems = (ListView)findViewById(R.id.lvItems);
+        ButterKnife.bind(this);
 
         readItems();
 
         // The array adapter will apply a model to a template list item view to produce a model
         itemsAdapter = new ToDoAdapter(this, items);
         listViewItems.setAdapter(itemsAdapter);
-
-        setupListViewListener();
-        setupAddNewToDoTextField();
     }
 
     @Override
@@ -121,42 +122,28 @@ public class MainActivity extends AppCompatActivity {
      * Add an item to the view
      * @param view
      */
-    public void onAddItem(View view) {
-        EditText editText = (EditText)findViewById(R.id.etNewItem);
-        String newItemText = editText.getText().toString();
+    @OnClick(R.id.btnAddItem)
+    public void onAddItem(Button saveButton) {
+        String newItemText = addNewToDoItemTextInput.getText().toString();
         addToDoItem(newItemText);
-        editText.setText("");
+        addNewToDoItemTextInput.setText("");
     }
 
-    private void setupListViewListener() {
-
-        listViewItems.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        editToDoItem(itemsAdapter.getItem(position));
-                    }
-                });
-
-        listViewItems.setOnItemLongClickListener(
-                new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        removeToDoItem(itemsAdapter.getItem(position));
-                        return true;
-                    }
-                });
+    @OnItemClick(R.id.lvItems)
+    void onItemClick(int position) {
+        editToDoItem(itemsAdapter.getItem(position));
     }
 
-    private void setupAddNewToDoTextField() {
+    @OnItemLongClick(R.id.lvItems)
+    boolean onItemLongClick(int position) {
+        removeToDoItem(itemsAdapter.getItem(position));
+        return true;
+    }
+
+    @OnTextChanged(R.id.etNewItem)
+    void onToDoTextFieldChanged(Editable s) {
         // Only enable the add new to-do button when we have a non empty item name
-        addNewToDoItemTextInput.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                addNewToDoItemButton.setEnabled(!TextUtils.isEmpty(s.toString()));
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-            public void onTextChanged(CharSequence s, int start, int before, int count){}
-        });
+        addNewToDoItemButton.setEnabled(!TextUtils.isEmpty(s.toString()));
     }
 
     private void readItems() {

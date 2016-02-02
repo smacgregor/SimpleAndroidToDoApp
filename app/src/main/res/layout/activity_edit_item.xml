@@ -35,6 +35,5 @@
         android:id="@+id/saveButton"
         android:layout_below="@+id/editText"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="false"
-        android:onClick="onSubmitItemModification" />
+        android:layout_alignParentStart="false" />
 </RelativeLayout>

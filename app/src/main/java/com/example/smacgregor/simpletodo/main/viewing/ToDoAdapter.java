@@ -12,6 +12,9 @@ import com.example.smacgregor.simpletodo.core.ToDoItem;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by smacgregor on 1/29/16.
  */
@@ -19,8 +22,12 @@ public class ToDoAdapter extends ArrayAdapter<ToDoItem> {
 
     // View Lookup cache.
     // Yikes....the adapter now has to know about View specific details!
-    private static class ViewHolder {
-        TextView name;
+    static class ViewHolder {
+        @Bind(R.id.toDoName) TextView name;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 
     public ToDoAdapter(Context context, List<ToDoItem> toDoItems) {
@@ -34,9 +41,8 @@ public class ToDoAdapter extends ArrayAdapter<ToDoItem> {
         // if the view doesn't exist yet, inflate it
         ViewHolder viewHolder;
         if (convertView == null) {
-            viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo, parent, false);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.toDoName);
+            viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder)convertView.getTag();
