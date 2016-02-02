@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,13 +14,18 @@ import android.widget.EditText;
 import com.example.smacgregor.simpletodo.R;
 import com.example.smacgregor.simpletodo.core.ToDoItem;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
+
 public class EditItemActivity extends AppCompatActivity {
 
     // Move these to a shared constants file
     public static final String TODO_ITEM_ID = "ToDoItemId";
 
-    private EditText editItemTextField;
-    private Button saveButton;
+    @Bind(R.id.editText) EditText editItemTextField;
+    @Bind(R.id.saveButton) Button saveButton;
 
     private ToDoItem toDoItem;
 
@@ -29,9 +33,7 @@ public class EditItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
-
-        saveButton = (Button)findViewById(R.id.saveButton);
-        editItemTextField = (EditText)findViewById(R.id.editText);
+        ButterKnife.bind(this);
 
         toDoItem = ToDoItem.load(ToDoItem.class, getIntent().getLongExtra(EditItemActivity.TODO_ITEM_ID, 0));
         setupEditItemTextField(toDoItem.name);
@@ -59,6 +61,7 @@ public class EditItemActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @OnClick(R.id.saveButton)
     public void onSubmitItemModification(View view) {
         saveModifications();
     }
@@ -72,16 +75,13 @@ public class EditItemActivity extends AppCompatActivity {
         finish();
     }
 
+    @OnTextChanged(R.id.editText)
+    void onToDoNameTextChanged(Editable s) {
+        // Only enable the save button when we have a non empty todo item name
+        saveButton.setEnabled(!TextUtils.isEmpty(s.toString()));
+    }
+
     private void setupEditItemTextField(final String editItemName) {
         editItemTextField.append(editItemName);
-
-        // Only enable the save button when we have a non empty todo item name
-        editItemTextField.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                saveButton.setEnabled(!TextUtils.isEmpty(s.toString()));
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-            public void onTextChanged(CharSequence s, int start, int before, int count){}
-        });
     }
 }
